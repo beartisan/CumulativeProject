@@ -94,8 +94,11 @@ namespace CumulativeProject.Controllers
         [HttpGet]
         [Route("api/TeacherData/FindTeacher/{TeacherId}")]
 
-        public Teacher FindTeacher(int TeacherId)
+        public Teacher FindTeacher(int id)
         {
+
+            Teacher SelectedTeacher = new Teacher();
+
             //Create a connection
             MySqlConnection Conn = School.AccessDatabase();
 
@@ -103,20 +106,22 @@ namespace CumulativeProject.Controllers
             //Open the connection
             Conn.Open();
 
-            //SQL Query
-            string query = "Select * from teachers where TeacherId=@key " + TeacherId; //.ToString();
-
             //Establish a new command query for our db
             MySqlCommand cmd = Conn.CreateCommand();
-            cmd.CommandText = query;
+
+            //SQL Query
+            //string query = "Select * from teachers where TeacherId=@id"; //.ToString();
+            cmd.CommandText = "Select * from teachers where TeacherId=@id" ;
+
+            // cmd.CommandText = query;
 
             //sanitize the teacherId input
-            cmd.Parameters.AddWithValue("@id", TeacherId);
+            cmd.Parameters.AddWithValue("@id", id);
             cmd.Prepare();
 
             //Gather ResultSet of Query into a variable
             MySqlDataReader ResultSet = cmd.ExecuteReader();
-            Teacher SelectedTeacher = new Teacher();
+
 
             //while loop
             while (ResultSet.Read())
